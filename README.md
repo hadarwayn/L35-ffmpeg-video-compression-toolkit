@@ -584,7 +584,8 @@ pip install -r requirements.txt
 
 ## Contact & Support
 
-**Author:** Hadar
+**Author:** Hadar Wayn
+
 **Course:** AI Developer Expert — Dr. Yoram Segal
 
 ---
