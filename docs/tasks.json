@@ -1,0 +1,1029 @@
+{
+  "project_name": "L35 — Advanced Video Compression Analysis & Visualization Toolkit",
+  "version": "1.0",
+  "date": "2026-02-07",
+  "total_estimated_hours": 28.5,
+  "total_tasks": 47,
+  "phases": [
+    {
+      "phase": "1_project_setup",
+      "phase_name": "Project Setup & Infrastructure",
+      "description": "Create directory structure, virtual environment, configuration files, and shared utilities that all tasks depend on.",
+      "estimated_hours": 4.5,
+      "tasks": [
+        {
+          "id": "1.1",
+          "name": "Create complete directory structure",
+          "description": "Create all folders matching the PRD directory tree: src/, src/task1/, src/task2/, src/task3/, src/utils/, docs/, input/, output/ (with subfolders), results/graphs/, logs/config/, venv/. Create all __init__.py files and .gitkeep placeholders.",
+          "priority": "critical",
+          "estimated_hours": 0.5,
+          "dependencies": [],
+          "acceptance_criteria": [
+            "All directories from PRD Section 9 exist",
+            "Every Python package directory has __init__.py",
+            "input/, output/, logs/ have .gitkeep files",
+            "output/ has 3 subdirectories matching exact names: 'task 1 - video information', 'task 2 - motion vectors', 'task 3 - rotating rectangle'",
+            "output/task 2 - motion vectors/sample_frames/ directory exists"
+          ],
+          "files_to_create": [
+            "src/__init__.py",
+            "src/task1/__init__.py",
+            "src/task2/__init__.py",
+            "src/task3/__init__.py",
+            "src/utils/__init__.py",
+            "docs/.gitkeep",
+            "input/.gitkeep",
+            "output/task 1 - video information/.gitkeep",
+            "output/task 2 - motion vectors/.gitkeep",
+            "output/task 2 - motion vectors/sample_frames/.gitkeep",
+            "output/task 3 - rotating rectangle/.gitkeep",
+            "results/graphs/.gitkeep",
+            "logs/.gitkeep",
+            "logs/config/.gitkeep",
+            "venv/.gitkeep"
+          ]
+        },
+        {
+          "id": "1.2",
+          "name": "Create requirements.txt with exact versions",
+          "description": "List all Python dependencies with pinned versions. Core: numpy, opencv-python, matplotlib, pandas. Test each package installs correctly with UV.",
+          "priority": "critical",
+          "estimated_hours": 0.25,
+          "dependencies": ["1.1"],
+          "acceptance_criteria": [
+            "All packages listed with ==exact.version format",
+            "uv pip install -r requirements.txt succeeds without errors",
+            "All imports work in Python after installation"
+          ],
+          "files_to_create": [
+            "requirements.txt"
+          ]
+        },
+        {
+          "id": "1.3",
+          "name": "Create .gitignore",
+          "description": "Protect virtual environments, cache files, large video files, and logs from being committed to Git. Allow venv/.gitkeep, logs/config/, and input/.gitkeep.",
+          "priority": "critical",
+          "estimated_hours": 0.15,
+          "dependencies": ["1.1"],
+          "acceptance_criteria": [
+            ".venv/ excluded",
+            "__pycache__/ excluded",
+            "*.mp4 in input/ excluded (but input/.gitkeep included)",
+            "logs/*.log excluded (but logs/config/ included)",
+            "output/ large files handled appropriately"
+          ],
+          "files_to_create": [
+            ".gitignore"
+          ]
+        },
+        {
+          "id": "1.4",
+          "name": "Create venv/.gitkeep with UV instructions",
+          "description": "Create the virtual environment indicator file with clear activation instructions for WSL and Windows.",
+          "priority": "high",
+          "estimated_hours": 0.1,
+          "dependencies": ["1.1"],
+          "acceptance_criteria": [
+            "File contains UV venv creation command",
+            "File contains activation commands for WSL and Windows"
+          ],
+          "files_to_create": [
+            "venv/.gitkeep"
+          ]
+        },
+        {
+          "id": "1.5",
+          "name": "Implement src/config.py — Central configuration",
+          "description": "Define ALL project constants in one place: paths (using pathlib), Task 3 rectangle parameters (size, opacity, rotation speed, velocity), encoding parameters (CRF, preset), graph styling (colors, DPI, figure sizes), and logging settings. Every 'magic number' from the PRD must live here with explanatory comments.",
+          "priority": "critical",
+          "estimated_hours": 0.5,
+          "dependencies": ["1.1"],
+          "acceptance_criteria": [
+            "All paths use pathlib.Path and are relative",
+            "All Task 3 rectangle constants defined with explanations",
+            "All encoding parameters (CRF, preset) defined",
+            "Graph color scheme constants defined",
+            "No magic numbers — every constant has a comment explaining its value",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/config.py"
+          ]
+        },
+        {
+          "id": "1.6",
+          "name": "Implement src/utils/paths.py — Path resolution utilities",
+          "description": "Create helper functions for resolving project root, input directory, output subdirectories, results directory, and logs directory. All paths relative using pathlib. Include auto-creation of output directories.",
+          "priority": "critical",
+          "estimated_hours": 0.3,
+          "dependencies": ["1.5"],
+          "acceptance_criteria": [
+            "get_project_root() works from any file in the project",
+            "get_input_dir(), get_output_dir(task_number), get_results_dir() all work",
+            "Auto-creates output directories if they don't exist",
+            "No absolute/hardcoded paths anywhere",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/utils/paths.py"
+          ]
+        },
+        {
+          "id": "1.7",
+          "name": "Implement src/utils/logger.py — Ring buffer logging",
+          "description": "Implement the ring buffer logging system per project guidelines: max lines per file, max log files, automatic rotation, status display. Create logs/config/log_config.json with settings.",
+          "priority": "high",
+          "estimated_hours": 0.75,
+          "dependencies": ["1.6"],
+          "acceptance_criteria": [
+            "RingBufferHandler class implemented",
+            "setup_logger() function works with config file",
+            "Log rotation triggers when max_lines reached",
+            "Old log files deleted when max_files reached",
+            "print_log_status() shows file count, total lines, total KB",
+            "log_config.json created in logs/config/",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/utils/logger.py",
+            "logs/config/log_config.json"
+          ]
+        },
+        {
+          "id": "1.8",
+          "name": "Implement src/utils/validators.py — Input validation",
+          "description": "Create validation functions: check if input video exists and is MP4, check FFmpeg/FFprobe are installed and accessible, check required FFmpeg features (libx264, codecview). All validators return clear error messages.",
+          "priority": "critical",
+          "estimated_hours": 0.5,
+          "dependencies": ["1.6", "1.7"],
+          "acceptance_criteria": [
+            "validate_input_video() checks file exists and is .mp4",
+            "validate_ffmpeg() checks ffmpeg command is accessible",
+            "validate_ffprobe() checks ffprobe command is accessible",
+            "validate_ffmpeg_features() checks libx264 encoder and codecview filter",
+            "All validators raise informative errors with fix suggestions",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/utils/validators.py"
+          ]
+        },
+        {
+          "id": "1.9",
+          "name": "Implement src/ffmpeg_utils.py — FFmpeg wrapper functions",
+          "description": "Create wrapper functions for running FFmpeg and FFprobe commands from Python: run_ffprobe_json() to get JSON metadata, run_ffprobe_csv() to get frame data, run_ffmpeg() to execute encoding/filter commands. All use subprocess.run() with list arguments (no shell=True). Include error handling and logging.",
+          "priority": "critical",
+          "estimated_hours": 0.75,
+          "dependencies": ["1.7", "1.8"],
+          "acceptance_criteria": [
+            "run_ffprobe_json(input_path) returns parsed dict",
+            "run_ffprobe_csv(input_path, entries) returns raw CSV string",
+            "run_ffmpeg(args_list) executes FFmpeg and returns success/failure",
+            "All functions use subprocess.run() with list args (no shell=True)",
+            "All functions log their commands and results",
+            "Errors include the actual FFmpeg stderr output",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/ffmpeg_utils.py"
+          ]
+        },
+        {
+          "id": "1.10",
+          "name": "Populate all __init__.py files with exports",
+          "description": "After all utility modules are created, populate each __init__.py with proper imports and __all__ definitions. This enables clean imports like 'from src.utils import validate_input_video'.",
+          "priority": "high",
+          "estimated_hours": 0.25,
+          "dependencies": ["1.5", "1.6", "1.7", "1.8", "1.9"],
+          "acceptance_criteria": [
+            "src/__init__.py exposes top-level modules",
+            "src/utils/__init__.py exposes all utility functions",
+            "src/task1/__init__.py prepared (will be populated after Task 1 modules)",
+            "src/task2/__init__.py prepared",
+            "src/task3/__init__.py prepared",
+            "from src.utils import validate_input_video works from main.py"
+          ],
+          "files_to_create": [
+            "src/__init__.py (update)",
+            "src/utils/__init__.py (update)",
+            "src/task1/__init__.py (update)",
+            "src/task2/__init__.py (update)",
+            "src/task3/__init__.py (update)"
+          ]
+        },
+        {
+          "id": "1.11",
+          "name": "Verify Phase 1 — Smoke test infrastructure",
+          "description": "Run a quick validation: import all modules, check paths resolve correctly, verify FFmpeg is accessible, confirm logging works, ensure output directories exist. Fix any import or path issues.",
+          "priority": "critical",
+          "estimated_hours": 0.25,
+          "dependencies": ["1.10"],
+          "acceptance_criteria": [
+            "python -c 'from src.utils import validators; print(\"OK\")' succeeds",
+            "python -c 'from src import config; print(config.CRF_VALUE)' succeeds",
+            "FFmpeg validation passes",
+            "Logger creates a test log entry",
+            "All output directories exist"
+          ],
+          "files_to_create": []
+        }
+      ]
+    },
+    {
+      "phase": "2_task1_video_information",
+      "phase_name": "Task 1 — Video Statistics & Metadata Extraction",
+      "description": "Extract comprehensive metadata, analyze GOP structure, compute frame statistics, generate visualizations, and produce a human-readable report.",
+      "estimated_hours": 7.0,
+      "tasks": [
+        {
+          "id": "2.1",
+          "name": "Implement src/task1/metadata_extractor.py",
+          "description": "Extract full video metadata using ffprobe JSON output. Parse container info (format, duration, bitrate, file size), video stream info (resolution, frame rate, codec, profile, level, pixel format, color space, bit depth), and audio stream info (codec, sample rate, channels, bitrate). Save raw JSON and return structured dict.",
+          "priority": "critical",
+          "estimated_hours": 1.0,
+          "dependencies": ["1.9", "1.11"],
+          "acceptance_criteria": [
+            "extract_metadata(input_path) returns structured dict with all fields from PRD Section 5.3A",
+            "Handles videos with and without audio streams",
+            "Saves raw ffprobe JSON to output/task 1 - video information/metadata.json",
+            "All fields have type hints",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/task1/metadata_extractor.py"
+          ]
+        },
+        {
+          "id": "2.2",
+          "name": "Implement src/task1/frame_statistics.py",
+          "description": "Extract per-frame data using ffprobe: frame number, picture type (I/P/B), key_frame flag, packet size, PTS time. Parse the CSV output into a pandas DataFrame. Save as frame_statistics.csv. Calculate I/P/B frame counts and percentages.",
+          "priority": "critical",
+          "estimated_hours": 1.0,
+          "dependencies": ["1.9", "1.11"],
+          "acceptance_criteria": [
+            "extract_frame_data(input_path) returns pandas DataFrame",
+            "DataFrame columns: frame_number, pict_type, key_frame, pkt_size, pts_time",
+            "Correctly identifies I, P, and B frames",
+            "Frame count matches total frames from metadata",
+            "Saves CSV to output/task 1 - video information/frame_statistics.csv",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/task1/frame_statistics.py"
+          ]
+        },
+        {
+          "id": "2.3",
+          "name": "Implement src/task1/gop_analyzer.py",
+          "description": "Analyze GOP structure from frame data: detect GOP pattern (e.g., IBBBPBBBP), calculate GOP length, determine if fixed or variable, count I-frame intervals. Compute I-frame statistics: average/min/max size, standard deviation, temporal distance. Save structured analysis to gop_analysis.json.",
+          "priority": "critical",
+          "estimated_hours": 1.5,
+          "dependencies": ["2.2"],
+          "acceptance_criteria": [
+            "analyze_gop(frame_df) returns dict with pattern, length, type (fixed/variable)",
+            "I-frame statistics computed: avg, min, max, std of sizes",
+            "Average temporal distance between I-frames in frames and seconds",
+            "Bitrate per frame type computed (avg I, P, B sizes)",
+            "Peak bitrate moment identified (frame number and timestamp)",
+            "Saves gop_analysis.json to output directory",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/task1/gop_analyzer.py"
+          ]
+        },
+        {
+          "id": "2.4",
+          "name": "Implement src/task1/visualizer.py — 3 graphs",
+          "description": "Generate three publication-quality visualizations using matplotlib: (1) Frame Type Distribution pie chart with I/P/B percentages and counts, (2) Frame Size Distribution box plot per frame type, (3) Bitrate Over Time line chart with I-frame position markers. All graphs saved as PNG at 300 DPI.",
+          "priority": "critical",
+          "estimated_hours": 1.5,
+          "dependencies": ["2.2", "2.3"],
+          "acceptance_criteria": [
+            "Pie chart: slices for I/P/B with percentages and raw counts in labels",
+            "Pie chart: color scheme Blue=I, Green=P, Orange=B",
+            "Box plot: one box per frame type showing min, Q1, median, Q3, max",
+            "Box plot: clearly shows I-frames are larger than P and B",
+            "Line chart: x-axis=time(sec), y-axis=bitrate(kbps), 1-second windowed average",
+            "Line chart: vertical markers at I-frame positions",
+            "All graphs have titles, axis labels, legends, grid",
+            "All saved to output/task 1 - video information/ as PNG at 300 DPI",
+            "Also copied to results/graphs/ for README embedding",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/task1/visualizer.py"
+          ]
+        },
+        {
+          "id": "2.5",
+          "name": "Implement src/task1/report_generator.py",
+          "description": "Generate a human-readable summary_report.txt combining all Task 1 findings: video properties table, GOP analysis, frame type distribution, I-frame statistics, key observations. The report should be readable by a non-technical person — use plain English explanations alongside numbers.",
+          "priority": "high",
+          "estimated_hours": 0.75,
+          "dependencies": ["2.1", "2.2", "2.3"],
+          "acceptance_criteria": [
+            "Report includes video properties in a formatted table",
+            "Report includes GOP pattern and explanation",
+            "Report includes frame type counts and percentages",
+            "Report includes I-frame statistics (avg, min, max)",
+            "Report includes 'Key Findings' section with plain-English observations",
+            "Saved to output/task 1 - video information/summary_report.txt",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/task1/report_generator.py"
+          ]
+        },
+        {
+          "id": "2.6",
+          "name": "Update src/task1/__init__.py and integrate",
+          "description": "Populate Task 1 __init__.py with exports. Create a run_task1(input_path) function that orchestrates all Task 1 steps in sequence: extract metadata → frame statistics → GOP analysis → visualizations → report. Test end-to-end with a sample video.",
+          "priority": "critical",
+          "estimated_hours": 0.5,
+          "dependencies": ["2.1", "2.2", "2.3", "2.4", "2.5"],
+          "acceptance_criteria": [
+            "from src.task1 import run_task1 works",
+            "run_task1(input_path) generates all 7 output files listed in PRD Section 4.2",
+            "All files appear in output/task 1 - video information/",
+            "No errors on a standard H.264 MP4 video",
+            "Completes in < 30 seconds for a 1-minute 1080p video"
+          ],
+          "files_to_create": [
+            "src/task1/__init__.py (update)"
+          ]
+        },
+        {
+          "id": "2.7",
+          "name": "Test Task 1 — Validation run",
+          "description": "Run Task 1 on the actual input video. Verify all output files generated, manually check 3 I-frame sizes against ffprobe output, confirm GOP pattern matches visual inspection, verify all 3 graphs render correctly. Fix any issues found.",
+          "priority": "critical",
+          "estimated_hours": 0.75,
+          "dependencies": ["2.6"],
+          "acceptance_criteria": [
+            "All 7 output files generated without errors",
+            "3 I-frame sizes verified manually against raw ffprobe data",
+            "GOP pattern verified against manual frame inspection",
+            "All 3 graphs open correctly as PNG images",
+            "Summary report is readable and accurate",
+            "Runtime < 30 seconds"
+          ],
+          "files_to_create": []
+        }
+      ]
+    },
+    {
+      "phase": "3_task2_motion_vectors",
+      "phase_name": "Task 2 — Motion Vector & Macroblock Visualization",
+      "description": "Generate motion vector overlay video, extract representative sample frames, and compute MV statistics.",
+      "estimated_hours": 5.0,
+      "tasks": [
+        {
+          "id": "3.1",
+          "name": "Implement src/task2/mv_visualizer.py",
+          "description": "Generate the motion vector overlay video using FFmpeg's codecview filter. Build the FFmpeg command with -flags2 +export_mvs, codecview=mv=pf+bf+bb:block=1, and libx264 CRF 18 encoding. Handle the output path (spaces in directory name). Verify output video is playable.",
+          "priority": "critical",
+          "estimated_hours": 1.0,
+          "dependencies": ["1.9", "1.11"],
+          "acceptance_criteria": [
+            "generate_mv_video(input_path, output_path) creates overlay MP4",
+            "Motion vectors visible as colored arrows",
+            "Macroblock 16×16 grid visible on all frames",
+            "Output video playable in VLC/mpv",
+            "No dropped frames or sync issues",
+            "Handles directory names with spaces correctly",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/task2/mv_visualizer.py"
+          ]
+        },
+        {
+          "id": "3.2",
+          "name": "Implement src/task2/frame_extractor.py",
+          "description": "Extract 5–8 representative sample frames from the MV overlay video as PNG files. Must extract: (1) one I-frame (showing grid but no MVs), (2) two P-frames with forward MVs, (3) one B-frame if present, (4) one high-motion frame (auto-detected by largest average packet size in a window), (5) one low-motion frame (auto-detected by smallest packet size). Use FFmpeg select filter for frame-type extraction.",
+          "priority": "critical",
+          "estimated_hours": 1.5,
+          "dependencies": ["3.1", "2.2"],
+          "acceptance_criteria": [
+            "5+ PNG frames extracted to output/task 2 - motion vectors/sample_frames/",
+            "At least one I-frame captured (shows grid, no arrows)",
+            "At least two P-frames captured (shows green arrows)",
+            "High-motion and low-motion frames auto-detected",
+            "Filenames clearly indicate frame type: frame_iframe_001.png etc.",
+            "All PNGs are high-quality (usable in README)",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/task2/frame_extractor.py"
+          ]
+        },
+        {
+          "id": "3.3",
+          "name": "Implement src/task2/mv_analyzer.py",
+          "description": "Generate motion vector statistics and save to mv_analysis.json. Include: total frames analyzed, frames with MVs vs. without (I-frames), B-frame presence (boolean + count), video characteristics summary (resolution, fps, content type). Use frame data from Task 1 if available.",
+          "priority": "high",
+          "estimated_hours": 0.75,
+          "dependencies": ["3.1", "2.2"],
+          "acceptance_criteria": [
+            "mv_analysis.json generated with all specified fields",
+            "Correctly reports B-frame presence/absence",
+            "Frame counts consistent with Task 1 data",
+            "Includes note about what MV colors mean",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/task2/mv_analyzer.py"
+          ]
+        },
+        {
+          "id": "3.4",
+          "name": "Update src/task2/__init__.py and integrate",
+          "description": "Populate Task 2 __init__.py with exports. Create run_task2(input_path) that orchestrates: generate MV overlay video → extract sample frames → compute MV stats. Test end-to-end.",
+          "priority": "critical",
+          "estimated_hours": 0.5,
+          "dependencies": ["3.1", "3.2", "3.3"],
+          "acceptance_criteria": [
+            "from src.task2 import run_task2 works",
+            "run_task2(input_path) generates overlay MP4, sample PNGs, and analysis JSON",
+            "All files appear in output/task 2 - motion vectors/",
+            "Completes in < 60 seconds for a 1-minute 1080p video"
+          ],
+          "files_to_create": [
+            "src/task2/__init__.py (update)"
+          ]
+        },
+        {
+          "id": "3.5",
+          "name": "Test Task 2 — Validation run",
+          "description": "Run Task 2 on the actual input video. Verify overlay video shows arrows and grid, sample frames are correctly categorized, I-frame has no arrows, P-frame has green arrows, MV analysis JSON is correct. Play overlay video in VLC to confirm quality.",
+          "priority": "critical",
+          "estimated_hours": 0.75,
+          "dependencies": ["3.4"],
+          "acceptance_criteria": [
+            "Overlay video plays correctly with visible MVs and grid",
+            "Sample frames correctly labeled by type",
+            "I-frame screenshot shows grid but no arrows",
+            "P-frame screenshot shows green arrows",
+            "mv_analysis.json matches Task 1 frame counts",
+            "Runtime < 60 seconds"
+          ],
+          "files_to_create": []
+        },
+        {
+          "id": "3.6",
+          "name": "Handle edge case: video with no B-frames",
+          "description": "Some H.264 videos are encoded without B-frames (only I and P). Ensure Task 2 handles this gracefully: skip B-frame extraction, note absence in mv_analysis.json, document in report that only green (P-frame) arrows will be visible.",
+          "priority": "high",
+          "estimated_hours": 0.5,
+          "dependencies": ["3.4"],
+          "acceptance_criteria": [
+            "No crash or error when B-frames are absent",
+            "mv_analysis.json correctly reports has_b_frames: false",
+            "Frame extraction skips B-frame step gracefully",
+            "Log message explains why blue/red arrows are not visible"
+          ],
+          "files_to_create": []
+        }
+      ]
+    },
+    {
+      "phase": "4_task3_rotating_rectangle",
+      "phase_name": "Task 3 — Moving & Rotating Rectangle Overlay",
+      "description": "Implement frame-by-frame decompression, rectangle overlay rendering, recompression, and compression impact analysis.",
+      "estimated_hours": 7.5,
+      "tasks": [
+        {
+          "id": "4.1",
+          "name": "Implement src/task3/motion_logic.py",
+          "description": "Implement the rectangle movement and rotation mathematics. Functions needed: (1) calculate_position(frame_num, fps, width, height) — returns x, y with edge bouncing, (2) calculate_angle(frame_num, fps) — returns rotation angle in degrees (360° per 5 seconds), (3) update_velocity(x, y, vx, vy, rect_w, rect_h, frame_w, frame_h) — handles edge bouncing. All parameters from config.py.",
+          "priority": "critical",
+          "estimated_hours": 0.75,
+          "dependencies": ["1.5", "1.11"],
+          "acceptance_criteria": [
+            "Rectangle starts at center of frame",
+            "Moves diagonally with configurable velocity",
+            "Bounces off all 4 frame edges without going out of bounds",
+            "Rotation angle increases smoothly: 360° every 5 seconds",
+            "All parameters sourced from config.py",
+            "NumPy used for trigonometry calculations",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/task3/motion_logic.py"
+          ]
+        },
+        {
+          "id": "4.2",
+          "name": "Implement src/task3/rectangle_overlay.py — Main rendering pipeline",
+          "description": "Implement the core decompress → edit → recompress pipeline using OpenCV. For each frame: (1) read frame with cv2.VideoCapture, (2) compute rectangle position and angle, (3) create rotated rectangle with semi-transparency using cv2.getRotationMatrix2D + cv2.warpAffine + cv2.addWeighted, (4) write frame with cv2.VideoWriter. Handle audio remuxing via FFmpeg at the end. Log progress every 100 frames.",
+          "priority": "critical",
+          "estimated_hours": 2.0,
+          "dependencies": ["4.1", "1.9"],
+          "acceptance_criteria": [
+            "render_overlay(input_path, output_path) processes all frames",
+            "Rectangle is semi-transparent (70% opacity) — background visible through it",
+            "Rectangle rotates smoothly (no jitter)",
+            "Rectangle bounces off edges cleanly",
+            "Rectangle visible on both light and dark backgrounds",
+            "Audio track preserved in final output (if original has audio)",
+            "Output video playable in standard players",
+            "Progress logged every 100 frames",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/task3/rectangle_overlay.py"
+          ]
+        },
+        {
+          "id": "4.3",
+          "name": "Implement rectangle position logging",
+          "description": "During rendering, log each frame's rectangle state to a list, then save as rectangle_log.csv. Columns: frame_number, timestamp_sec, center_x, center_y, angle_degrees, velocity_x, velocity_y. This can be integrated into rectangle_overlay.py or as a separate writer if needed for line count.",
+          "priority": "high",
+          "estimated_hours": 0.5,
+          "dependencies": ["4.2"],
+          "acceptance_criteria": [
+            "CSV has one row per frame",
+            "All columns present: frame_number, timestamp_sec, center_x, center_y, angle_degrees, velocity_x, velocity_y",
+            "Timestamps are correct (frame_number / fps)",
+            "Angles range from 0 to 360 and wrap correctly",
+            "Saved to output/task 3 - rotating rectangle/rectangle_log.csv"
+          ],
+          "files_to_create": []
+        },
+        {
+          "id": "4.4",
+          "name": "Implement src/task3/compression_analyzer.py",
+          "description": "Compare compression metrics before and after overlay: (1) Run ffprobe on original video to get file size, bitrate, avg frame size, (2) Run ffprobe on overlay video for the same metrics, (3) Calculate delta (absolute and percentage increase), (4) Save comparison to compression_comparison.json.",
+          "priority": "critical",
+          "estimated_hours": 1.0,
+          "dependencies": ["4.2", "1.9"],
+          "acceptance_criteria": [
+            "compare_compression(original_path, overlay_path) returns comparison dict",
+            "Comparison includes: file_size, avg_bitrate, avg_frame_size for both videos",
+            "Delta calculated as absolute and percentage",
+            "Saved to output/task 3 - rotating rectangle/compression_comparison.json",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/task3/compression_analyzer.py"
+          ]
+        },
+        {
+          "id": "4.5",
+          "name": "Implement src/task3/visualizer.py — Compression impact chart",
+          "description": "Generate a bar chart comparing original vs. modified video metrics: file size, average bitrate, average frame size. Use grouped bars (original = blue, modified = red). Include percentage increase labels on bars. Save as compression_impact.png at 300 DPI.",
+          "priority": "high",
+          "estimated_hours": 0.75,
+          "dependencies": ["4.4"],
+          "acceptance_criteria": [
+            "Bar chart shows 3 metric groups with 2 bars each (original vs. modified)",
+            "Bars clearly labeled with values",
+            "Percentage increase shown as annotation",
+            "Professional styling with title, labels, legend",
+            "Saved to output/task 3 - rotating rectangle/compression_impact.png",
+            "Also copied to results/graphs/",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "src/task3/visualizer.py"
+          ]
+        },
+        {
+          "id": "4.6",
+          "name": "Update src/task3/__init__.py and integrate",
+          "description": "Populate Task 3 __init__.py with exports. Create run_task3(input_path) that orchestrates: render overlay → log positions → analyze compression → generate chart. Test end-to-end.",
+          "priority": "critical",
+          "estimated_hours": 0.5,
+          "dependencies": ["4.2", "4.3", "4.4", "4.5"],
+          "acceptance_criteria": [
+            "from src.task3 import run_task3 works",
+            "run_task3(input_path) generates overlay MP4, CSV log, comparison JSON, impact chart",
+            "All files appear in output/task 3 - rotating rectangle/",
+            "Completes in < 120 seconds for a 1-minute 1080p video"
+          ],
+          "files_to_create": [
+            "src/task3/__init__.py (update)"
+          ]
+        },
+        {
+          "id": "4.7",
+          "name": "Test Task 3 — Validation run",
+          "description": "Run Task 3 on the actual input video. Verify: rectangle rotates and bounces, semi-transparency works, audio preserved, position log has correct frame count, compression comparison shows measurable increase. Play video in VLC.",
+          "priority": "critical",
+          "estimated_hours": 1.0,
+          "dependencies": ["4.6"],
+          "acceptance_criteria": [
+            "Rectangle rotates smoothly at 360°/5sec",
+            "Rectangle bounces off edges (verify in CSV log)",
+            "Semi-transparency visible (background shows through)",
+            "Audio plays correctly in output video",
+            "rectangle_log.csv has exactly total_frames rows",
+            "compression_comparison.json shows file size increase",
+            "compression_impact.png chart renders correctly",
+            "Runtime < 120 seconds"
+          ],
+          "files_to_create": []
+        },
+        {
+          "id": "4.8",
+          "name": "Edge case: handle video without audio",
+          "description": "Ensure Task 3's audio remuxing step doesn't crash when input video has no audio track. Add conditional check and skip audio copy if not present.",
+          "priority": "high",
+          "estimated_hours": 0.25,
+          "dependencies": ["4.7"],
+          "acceptance_criteria": [
+            "No crash when input has no audio",
+            "Output video created without audio when input has none",
+            "Log message indicates audio was skipped"
+          ],
+          "files_to_create": []
+        }
+      ]
+    },
+    {
+      "phase": "5_main_entry_point",
+      "phase_name": "Main Entry Point & Task Orchestration",
+      "description": "Create main.py that orchestrates all tasks with argument parsing, validation, progress display, and error handling.",
+      "estimated_hours": 1.5,
+      "tasks": [
+        {
+          "id": "5.1",
+          "name": "Implement main.py — Entry point with argument parsing",
+          "description": "Create the single entry point that: (1) parses command-line arguments (--task 1/2/3 or all, --input path), (2) validates environment (FFmpeg, input video), (3) runs selected task(s) in order, (4) displays progress and timing, (5) shows log status at end. Uses argparse for CLI. Prints clear step-by-step progress with emoji indicators.",
+          "priority": "critical",
+          "estimated_hours": 1.0,
+          "dependencies": ["2.6", "3.4", "4.6"],
+          "acceptance_criteria": [
+            "python main.py runs all 3 tasks on auto-detected input video",
+            "python main.py --task 1 runs only Task 1",
+            "python main.py --task 2 runs only Task 2",
+            "python main.py --task 3 runs only Task 3",
+            "python main.py --input path/to/video.mp4 accepts custom input path",
+            "Validates FFmpeg and input before starting any task",
+            "Displays elapsed time for each task and total",
+            "Shows log status at completion",
+            "Clear error messages for missing input or FFmpeg",
+            "File ≤ 150 lines"
+          ],
+          "files_to_create": [
+            "main.py"
+          ]
+        },
+        {
+          "id": "5.2",
+          "name": "End-to-end integration test — All 3 tasks",
+          "description": "Run python main.py with the actual input video and verify all outputs generated for all 3 tasks. Check total runtime, memory usage, and output file completeness. Fix any integration issues.",
+          "priority": "critical",
+          "estimated_hours": 0.5,
+          "dependencies": ["5.1"],
+          "acceptance_criteria": [
+            "All 3 tasks complete without errors",
+            "All output files from PRD Section 4.2 are present",
+            "Total runtime < 3.5 minutes for 1-minute 1080p video",
+            "All output videos playable",
+            "All PNG graphs renderable",
+            "All JSON/CSV files parseable"
+          ],
+          "files_to_create": []
+        }
+      ]
+    },
+    {
+      "phase": "6_documentation",
+      "phase_name": "Documentation — README & Final Docs",
+      "description": "Write the comprehensive README.md that serves as both documentation and educational showcase, plus update PRD and tasks.json with final results.",
+      "estimated_hours": 3.0,
+      "tasks": [
+        {
+          "id": "6.1",
+          "name": "Write README.md — Structure and non-results sections",
+          "description": "Create README.md with all structural sections per PRD Section 12 and project guidelines. Include: title, abstract, educational background (video compression theory), features list, system requirements, UV virtual environment setup (WSL + Windows), installation steps, how to run, project structure tree, code files summary table with line counts. Do NOT fill in results sections yet.",
+          "priority": "critical",
+          "estimated_hours": 1.5,
+          "dependencies": ["5.2"],
+          "acceptance_criteria": [
+            "All README sections from project guidelines present",
+            "Educational background explains GOP, frame types, MVs, DCT with 15-year-old analogies",
+            "UV setup instructions for both WSL and Windows",
+            "Installation steps tested and verified",
+            "Code files table lists every source file with description and line count",
+            "All line counts ≤ 150",
+            "Project structure tree matches actual directory"
+          ],
+          "files_to_create": [
+            "README.md"
+          ]
+        },
+        {
+          "id": "6.2",
+          "name": "Write README.md — Results sections with embedded images",
+          "description": "Fill in the results sections for all 3 tasks. Embed output images (graphs, sample frames) using relative paths. Include: Task 1 metadata tables + 3 graphs, Task 2 sample frame grid + color legend + MV explanation, Task 3 compression comparison table + impact chart. Every image gets a 'What you're looking at' explanation. Include FFmpeg commands reference section with breakdown tables.",
+          "priority": "critical",
+          "estimated_hours": 1.25,
+          "dependencies": ["6.1", "5.2"],
+          "acceptance_criteria": [
+            "Task 1 results: metadata table, GOP analysis, 3 embedded graph PNGs",
+            "Task 2 results: sample frames in table grid, color legend, MV explanation",
+            "Task 3 results: compression comparison table, embedded impact chart",
+            "Every image has alt text and 'What you're looking at' description",
+            "FFmpeg commands section with command breakdown tables",
+            "All image paths work on GitHub (relative to repo root)",
+            "README teaches video compression to a beginner"
+          ],
+          "files_to_create": [
+            "README.md (update)"
+          ]
+        },
+        {
+          "id": "6.3",
+          "name": "Copy PRD.md and tasks.json to docs/ folder",
+          "description": "Place final versions of PRD.md and tasks.json into the docs/ directory. Update tasks.json with actual hours spent (if tracked).",
+          "priority": "high",
+          "estimated_hours": 0.15,
+          "dependencies": ["6.2"],
+          "acceptance_criteria": [
+            "docs/PRD.md is the approved PRD",
+            "docs/tasks.json is this task file",
+            "Both files present in docs/ directory"
+          ],
+          "files_to_create": [
+            "docs/PRD.md",
+            "docs/tasks.json"
+          ]
+        }
+      ]
+    },
+    {
+      "phase": "7_testing_and_polish",
+      "phase_name": "Testing, Quality Assurance & Final Polish",
+      "description": "Run comprehensive tests, verify all acceptance criteria, clean up code, and prepare for GitHub upload.",
+      "estimated_hours": 3.0,
+      "tasks": [
+        {
+          "id": "7.1",
+          "name": "Code quality audit — Line counts and standards",
+          "description": "Verify every Python file is ≤ 150 lines. Check all functions have type hints and docstrings. Verify no basic Python loops for array operations (NumPy used). Confirm all paths are relative (no hardcoded absolute paths). Check all __init__.py files have proper exports.",
+          "priority": "critical",
+          "estimated_hours": 0.5,
+          "dependencies": ["6.2"],
+          "acceptance_criteria": [
+            "Every .py file ≤ 150 lines (use wc -l to verify)",
+            "All functions have type hints on parameters and return values",
+            "All functions have docstrings with WHAT/WHY/HOW",
+            "No basic Python loops for array math (grep for 'for.*range')",
+            "No absolute paths (grep for '/mnt/', '/home/', 'C:\\\\')",
+            "All __init__.py files populated correctly"
+          ],
+          "files_to_create": []
+        },
+        {
+          "id": "7.2",
+          "name": "Full test run #1 — Fresh environment",
+          "description": "Clear all output files and caches. Run python main.py from scratch. Verify all outputs generated. Record timing. Screenshot key results for README if not already captured.",
+          "priority": "critical",
+          "estimated_hours": 0.5,
+          "dependencies": ["7.1"],
+          "acceptance_criteria": [
+            "All output directories cleaned before run",
+            "__pycache__ cleared",
+            "python main.py completes without errors",
+            "All output files present per PRD Section 4.2",
+            "Timing recorded for each task"
+          ],
+          "files_to_create": []
+        },
+        {
+          "id": "7.3",
+          "name": "Full test run #2 — Individual tasks",
+          "description": "Test each task individually: python main.py --task 1, --task 2, --task 3. Verify each works in isolation. Test with --input flag pointing to a different video if available.",
+          "priority": "high",
+          "estimated_hours": 0.5,
+          "dependencies": ["7.2"],
+          "acceptance_criteria": [
+            "Each task runs independently without errors",
+            "--task flag correctly selects individual task",
+            "--input flag works with custom path",
+            "Error message shown when no input video found"
+          ],
+          "files_to_create": []
+        },
+        {
+          "id": "7.4",
+          "name": "Full test run #3 — Edge cases and error handling",
+          "description": "Test error scenarios: (1) no input video in input/ folder, (2) non-MP4 file provided, (3) FFmpeg not installed simulation, (4) corrupted video file. Verify all produce helpful error messages, not crashes.",
+          "priority": "high",
+          "estimated_hours": 0.5,
+          "dependencies": ["7.2"],
+          "acceptance_criteria": [
+            "Missing input video → clear error message with instructions",
+            "Wrong file format → clear error message",
+            "Missing FFmpeg → clear error with installation instructions",
+            "No unhandled exceptions or stack traces for expected errors"
+          ],
+          "files_to_create": []
+        },
+        {
+          "id": "7.5",
+          "name": "Update README with test run results",
+          "description": "Embed the last 3 test run results into the README: actual timing, actual metrics, actual graph images. Ensure all image paths are correct for GitHub rendering. Add performance benchmark table.",
+          "priority": "critical",
+          "estimated_hours": 0.5,
+          "dependencies": ["7.2", "7.3", "7.4"],
+          "acceptance_criteria": [
+            "README includes actual results from test runs",
+            "Performance benchmark table with measured times",
+            "All embedded images render correctly (preview in markdown viewer)",
+            "Last 3 runs reflected in results section"
+          ],
+          "files_to_create": [
+            "README.md (update)"
+          ]
+        },
+        {
+          "id": "7.6",
+          "name": "Final cleanup and cache clearing",
+          "description": "Remove all __pycache__ directories, clear .pyc files, remove any temporary files. Verify .gitignore excludes all non-essential files. Do a final directory tree check against PRD.",
+          "priority": "high",
+          "estimated_hours": 0.25,
+          "dependencies": ["7.5"],
+          "acceptance_criteria": [
+            "No __pycache__/ directories present",
+            "No .pyc files present",
+            "No temporary files in output/",
+            ".gitignore covers all necessary exclusions",
+            "Directory tree matches PRD Section 9"
+          ],
+          "files_to_create": []
+        }
+      ]
+    },
+    {
+      "phase": "8_github_upload",
+      "phase_name": "Git & GitHub Upload",
+      "description": "Initialize git repository, commit all files, and push to GitHub.",
+      "estimated_hours": 0.5,
+      "tasks": [
+        {
+          "id": "8.1",
+          "name": "Initialize git repository and first commit",
+          "description": "Run git init, git add ., git commit. Verify .gitignore properly excludes .venv/, __pycache__/, logs/*.log, input/*.mp4 (large files). Verify venv/.gitkeep IS included.",
+          "priority": "critical",
+          "estimated_hours": 0.15,
+          "dependencies": ["7.6"],
+          "acceptance_criteria": [
+            "git init successful",
+            "git status shows only intended files",
+            ".venv/ NOT in staged files",
+            "venv/.gitkeep IS in staged files",
+            "input/*.mp4 NOT staged (but input/.gitkeep is)",
+            "First commit successful"
+          ],
+          "files_to_create": []
+        },
+        {
+          "id": "8.2",
+          "name": "Push to GitHub and verify",
+          "description": "Create GitHub repository, add remote origin, push main branch. Verify README renders correctly on GitHub — check all embedded images display, tables format properly, code blocks render. Check that output images (graphs, sample frames) are visible.",
+          "priority": "critical",
+          "estimated_hours": 0.25,
+          "dependencies": ["8.1"],
+          "acceptance_criteria": [
+            "Repository visible on GitHub",
+            "README renders correctly with all images",
+            "All tables display properly",
+            "Code blocks have syntax highlighting",
+            "Directory structure is correct",
+            "No secrets or large files committed"
+          ],
+          "files_to_create": []
+        },
+        {
+          "id": "8.3",
+          "name": "Final GitHub README verification",
+          "description": "Browse the GitHub repository as a visitor. Verify the README is the impressive 'face of the project' — all images load, educational content is clear, results are visible, installation instructions are complete. Make any final fixes.",
+          "priority": "high",
+          "estimated_hours": 0.1,
+          "dependencies": ["8.2"],
+          "acceptance_criteria": [
+            "README is visually impressive as a portfolio piece",
+            "All images load on GitHub",
+            "A non-technical reader can understand what the project does",
+            "A technical reader can reproduce the results",
+            "Project is portfolio-ready"
+          ],
+          "files_to_create": []
+        }
+      ]
+    }
+  ],
+  "file_structure": {
+    "root": [
+      "README.md",
+      "main.py",
+      "requirements.txt",
+      ".gitignore"
+    ],
+    "venv": [
+      ".gitkeep"
+    ],
+    "src": [
+      "__init__.py",
+      "config.py",
+      "ffmpeg_utils.py"
+    ],
+    "src/task1": [
+      "__init__.py",
+      "metadata_extractor.py",
+      "gop_analyzer.py",
+      "frame_statistics.py",
+      "visualizer.py",
+      "report_generator.py"
+    ],
+    "src/task2": [
+      "__init__.py",
+      "mv_visualizer.py",
+      "frame_extractor.py",
+      "mv_analyzer.py"
+    ],
+    "src/task3": [
+      "__init__.py",
+      "rectangle_overlay.py",
+      "motion_logic.py",
+      "compression_analyzer.py",
+      "visualizer.py"
+    ],
+    "src/utils": [
+      "__init__.py",
+      "paths.py",
+      "logger.py",
+      "validators.py"
+    ],
+    "docs": [
+      "PRD.md",
+      "tasks.json"
+    ],
+    "input": [
+      ".gitkeep"
+    ],
+    "output/task 1 - video information": [
+      "metadata.json",
+      "gop_analysis.json",
+      "frame_statistics.csv",
+      "summary_report.txt",
+      "frame_type_distribution.png",
+      "frame_sizes_by_type.png",
+      "bitrate_over_time.png"
+    ],
+    "output/task 2 - motion vectors": [
+      "motion_vectors_overlay.mp4",
+      "mv_analysis.json",
+      "sample_frames/"
+    ],
+    "output/task 3 - rotating rectangle": [
+      "overlay_video.mp4",
+      "rectangle_log.csv",
+      "compression_comparison.json",
+      "compression_impact.png"
+    ],
+    "results/graphs": [
+      "frame_type_distribution.png",
+      "frame_sizes_by_type.png",
+      "bitrate_over_time.png",
+      "compression_impact.png"
+    ],
+    "logs": [
+      ".gitkeep",
+      "config/log_config.json"
+    ]
+  },
+  "dependency_graph_summary": {
+    "description": "High-level dependency flow between phases",
+    "flow": [
+      "Phase 1 (Setup) → Phase 2 (Task 1) + Phase 3 (Task 2) + Phase 4 (Task 3)",
+      "Phase 2 + Phase 3 + Phase 4 → Phase 5 (Main Entry Point)",
+      "Phase 5 → Phase 6 (Documentation)",
+      "Phase 6 → Phase 7 (Testing & Polish)",
+      "Phase 7 → Phase 8 (GitHub Upload)"
+    ],
+    "parallel_opportunities": [
+      "Tasks 2.1 and 2.2 can run in parallel (both depend only on Phase 1)",
+      "Phase 3 (Task 2) and Phase 4 (Task 3) can be developed in parallel after Phase 1",
+      "Tasks 3.1 and 4.1 have no mutual dependencies"
+    ]
+  },
+  "time_summary": {
+    "phase_1_setup": 4.5,
+    "phase_2_task1": 7.0,
+    "phase_3_task2": 5.0,
+    "phase_4_task3": 7.5,
+    "phase_5_main": 1.5,
+    "phase_6_docs": 3.0,
+    "phase_7_testing": 3.0,
+    "phase_8_github": 0.5,
+    "total_hours": 32.0,
+    "estimated_calendar_days": "5-7 days (working part-time)",
+    "note": "Phases 2, 3, 4 can be parallelized across multiple AI assistants to reduce wall-clock time to 3-4 days"
+  }
+}

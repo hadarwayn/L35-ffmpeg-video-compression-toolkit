@@ -1,0 +1,24 @@
+{
+  "total_frames_analyzed": 192,
+  "frames_with_motion_vectors": 191,
+  "frames_without_motion_vectors": 1,
+  "has_b_frames": true,
+  "b_frame_count": 135,
+  "frame_type_counts": {
+    "B": 135,
+    "P": 56,
+    "I": 1
+  },
+  "video_characteristics": {
+    "resolution": "1280x720",
+    "frame_rate": "24/1",
+    "codec": "h264",
+    "profile": "High"
+  },
+  "color_legend": {
+    "green": "Forward MV (P-frame) \u2014 block came from a previous frame",
+    "blue": "Forward MV (B-frame) \u2014 block came from a previous frame",
+    "red": "Backward MV (B-frame) \u2014 block came from a future frame",
+    "grid": "Macroblock boundaries \u2014 16x16 pixel blocks"
+  }
+}

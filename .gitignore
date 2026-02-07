@@ -1,0 +1,41 @@
+# Virtual Environments
+.venv/
+env/
+.uv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Logs (keep config, not actual logs)
+logs/*.log
+!logs/config/
+!logs/.gitkeep
+
+# Large video files in input (keep .gitkeep)
+input/*.mp4
+input/*.avi
+input/*.mkv
+!input/.gitkeep
+
+# Output videos (too large for git)
+output/**/*.mp4
+!output/**/.gitkeep
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/

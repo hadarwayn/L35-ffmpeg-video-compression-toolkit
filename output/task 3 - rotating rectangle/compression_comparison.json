@@ -1,0 +1,26 @@
+{
+  "original": {
+    "file_size_bytes": 4941089.0,
+    "avg_bitrate_kbps": 4941.09,
+    "avg_frame_size_bytes": 25734.84
+  },
+  "modified": {
+    "file_size_bytes": 6006498.0,
+    "avg_bitrate_kbps": 6006.5,
+    "avg_frame_size_bytes": 31283.84
+  },
+  "delta": {
+    "file_size_bytes": {
+      "absolute": 1065409.0,
+      "percent": 21.56
+    },
+    "avg_bitrate_kbps": {
+      "absolute": 1065.41,
+      "percent": 21.56
+    },
+    "avg_frame_size_bytes": {
+      "absolute": 5549.0,
+      "percent": 21.56
+    }
+  }
+}

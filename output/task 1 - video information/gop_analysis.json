@@ -1,0 +1,33 @@
+{
+  "gop_pattern": "IBPBBPBBPBPPBPBPBBBPPBBPBPBPBB",
+  "gop_lengths": [
+    192
+  ],
+  "avg_gop_length": 192.0,
+  "is_fixed_gop": true,
+  "frame_counts": {
+    "B": 135,
+    "P": 56,
+    "I": 1
+  },
+  "total_frames": 192,
+  "i_frame_stats": {
+    "count": 1,
+    "avg_size_bytes": 61596.0,
+    "min_size_bytes": 61596,
+    "max_size_bytes": 61596,
+    "std_size_bytes": 0.0,
+    "avg_distance_frames": 0.0,
+    "avg_distance_sec": 0.0
+  },
+  "avg_size_by_type_bytes": {
+    "I": 61596.0,
+    "P": 36242.05357142857,
+    "B": 19911.444444444445
+  },
+  "peak_bitrate": {
+    "frame_number": 0,
+    "timestamp_sec": 0.0,
+    "size_bytes": 61596
+  }
+}
