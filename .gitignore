@@ -22,15 +22,12 @@ logs/*.log
 !logs/config/
 !logs/.gitkeep
 
-# Large video files in input (keep .gitkeep)
-input/*.mp4
+# Large non-MP4 video files in input
 input/*.avi
 input/*.mkv
-!input/.gitkeep
 
-# Output videos (too large for git)
-output/**/*.mp4
-!output/**/.gitkeep
+# Temp files in output
+output/**/_temp_*
 
 # Testing
 .pytest_cache/

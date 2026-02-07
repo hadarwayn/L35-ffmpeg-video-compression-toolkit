@@ -40,6 +40,18 @@ A professor runs all three tasks on a sample video to visually explain GOP struc
 
 ---
 
+## Input Video
+
+The input video used for all analysis is an AI-generated clip (Gemini Video Generation, 1280x720, 24fps, 8 seconds):
+
+<a href="input/Gemini-Video-Generation-1.mp4">
+  <img src="results/previews/input_preview.gif" alt="Input Video Preview" width="480">
+</a>
+
+> *Click the preview to view the full MP4 video.*
+
+---
+
 ## Video Compression Background
 
 ### What is a GOP (Group of Pictures)?
@@ -215,14 +227,16 @@ L35/
 │   ├── PRD.md
 │   └── tasks.json
 │
-├── input/                                 # Place MP4 video here
+├── input/                                 # Input MP4 video (committed)
 ├── output/                                # Generated results
 │   ├── task 1 - video information/
 │   ├── task 2 - motion vectors/
 │   │   └── sample_frames/
 │   └── task 3 - rotating rectangle/
 │
-├── results/graphs/                        # Visualization PNGs
+├── results/
+│   ├── graphs/                            # Visualization PNGs
+│   └── previews/                          # GIF previews for README
 └── logs/                                  # Ring buffer logs
     └── config/log_config.json
 ```
@@ -323,6 +337,14 @@ L35/
 | Frames without MVs | 1 (I-frame) |
 | Has B-frames | Yes (135 frames) |
 
+#### Motion Vector Overlay Video
+
+<a href="output/task%202%20-%20motion%20vectors/motion_vectors_overlay.mp4">
+  <img src="results/previews/mv_overlay_preview.gif" alt="Motion Vector Overlay Preview" width="480">
+</a>
+
+> *Click the preview to view the full overlay MP4 — arrows show exactly how the encoder tracks block movement between frames.*
+
 #### Color Legend
 
 | Color | Arrow Type | Frame Type | Meaning |
@@ -357,6 +379,14 @@ L35/
 | Opacity | 70% (background visible through) |
 | Rotation | 360 degrees every 5 seconds |
 | Movement | Diagonal bouncing (5 px/frame H, 3 px/frame V) |
+
+#### Rotating Rectangle Overlay Video
+
+<a href="output/task%203%20-%20rotating%20rectangle/overlay_video.mp4">
+  <img src="results/previews/rectangle_preview.gif" alt="Rotating Rectangle Overlay Preview" width="480">
+</a>
+
+> *Click the preview to view the full overlay MP4 — a semi-transparent rectangle bounces and rotates across every frame, forcing the encoder to work harder.*
 
 **Compression Impact:**
 

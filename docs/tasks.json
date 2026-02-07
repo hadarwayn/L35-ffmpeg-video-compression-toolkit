@@ -69,9 +69,11 @@
           "acceptance_criteria": [
             ".venv/ excluded",
             "__pycache__/ excluded",
-            "*.mp4 in input/ excluded (but input/.gitkeep included)",
+            "input/*.mp4 committed (visible to repo visitors)",
+            "output/**/*.mp4 committed (visible to repo visitors)",
             "logs/*.log excluded (but logs/config/ included)",
-            "output/ large files handled appropriately"
+            "output/**/_temp_* excluded",
+            "results/previews/*.gif committed for README auto-play"
           ],
           "files_to_create": [
             ".gitignore"
@@ -724,12 +726,13 @@
           "estimated_hours": 1.25,
           "dependencies": ["6.1", "5.2"],
           "acceptance_criteria": [
+            "Input Video section: GIF preview with link to committed MP4",
             "Task 1 results: metadata table, GOP analysis, 3 embedded graph PNGs",
-            "Task 2 results: sample frames in table grid, color legend, MV explanation",
-            "Task 3 results: compression comparison table, embedded impact chart",
+            "Task 2 results: GIF preview of MV overlay + link to full MP4 + sample frames in table grid + color legend",
+            "Task 3 results: GIF preview of rotating rectangle + link to full MP4 + compression comparison table + impact chart",
             "Every image has alt text and 'What you're looking at' description",
             "FFmpeg commands section with command breakdown tables",
-            "All image paths work on GitHub (relative to repo root)",
+            "All image/video paths work on GitHub (relative to repo root)",
             "README teaches video compression to a beginner"
           ],
           "files_to_create": [
@@ -877,7 +880,9 @@
             "git status shows only intended files",
             ".venv/ NOT in staged files",
             "venv/.gitkeep IS in staged files",
-            "input/*.mp4 NOT staged (but input/.gitkeep is)",
+            "input/*.mp4 IS staged (video committed for repo visitors)",
+            "output/**/*.mp4 IS staged (output videos committed)",
+            "results/previews/*.gif IS staged (GIF previews for README)",
             "First commit successful"
           ],
           "files_to_create": []

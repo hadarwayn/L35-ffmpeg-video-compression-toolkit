@@ -562,8 +562,8 @@ L35-ffmpeg-video-toolkit/
 │   ├── PRD.md                     # This document
 │   └── tasks.json                 # Implementation task breakdown
 │
-├── input/                         # User places MP4 video here
-│   └── .gitkeep                   # Placeholder (video not committed)
+├── input/                         # Input MP4 video (committed to repo)
+│   └── *.mp4                     # H.264 video for analysis
 │
 ├── output/                        # All generated results
 │   ├── task 1 - video information/
@@ -572,7 +572,8 @@ L35-ffmpeg-video-toolkit/
 │   └── task 3 - rotating rectangle/
 │
 ├── results/                       # Graphs and visual results for README
-│   └── graphs/                    # All visualization PNGs
+│   ├── graphs/                    # All visualization PNGs
+│   └── previews/                  # GIF previews for README auto-play
 │
 └── logs/                          # Ring buffer logs
     ├── config/
@@ -655,9 +656,10 @@ PRESET = "medium"      # Encoding speed/compression trade-off
 The README is the **face of the project** — most visitors will only look at the README. It must include:
 
 ### 12.1 Visual Results (embedded in README)
+- **Input Video:** GIF preview auto-playing in README, linking to the committed MP4
 - **Task 1:** Tables with metadata, GOP analysis, frame statistics + 3 embedded graph images
-- **Task 2:** Embedded GIF or screenshot of MV overlay + sample frame images in a table grid + color legend
-- **Task 3:** Embedded GIF or screenshot of rotating rectangle + compression comparison table + impact chart
+- **Task 2:** GIF preview of MV overlay video (auto-plays) + link to full MP4 + sample frame images in a table grid + color legend
+- **Task 3:** GIF preview of rotating rectangle overlay (auto-plays) + link to full MP4 + compression comparison table + impact chart
 
 ### 12.2 Educational Content
 - Each task section explains the theory BEFORE showing results
